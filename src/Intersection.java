@@ -1,27 +1,28 @@
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Intersection {
     public static int interCount = 4;
     private int lightOffset = 25;
     protected static int[][] interCoords = {
-            {172,321},
-            {168,604},
-            {545,592},
-            {547,329}
+            {170,325},
+            {170,600},
+            {545,600},
+            {545,325}
     };
 
     private int[] interDirections = {
             //T,R,B,L
-            0b0111,
+            0b1011,
             0b1111,
             0b1101,
             0b1101
     };
     public ArrayList<Lights> lights = new ArrayList<>();
-    private static boolean isBlockedHor = false;
-    private int[] coords;
-    private int directions;
+    private static boolean isBlockedHor = true;
+    private final int[] coords;
+    private final int directions;
     public Intersection(int interNum){
            coords = interCoords[interNum];
            directions = interDirections[interNum];
@@ -49,12 +50,57 @@ public class Intersection {
         return coords;
     }
 
-    public int getDirections() {
-        return directions;
-    }
-    void doIntersectionWork(Time timeStamp){
+    void doIntersectionWork(Time timeStamp, ArrayList<Car> carList){
         for(Lights li : lights){
-            li.doLightsWork(timeStamp);
+            li.doLightsWork(timeStamp, carList);
+        }
+
+        int[] co = getCoords();
+        for(Car car : carList){
+            String dir = car.getDirection();
+            if(isBlocked()){
+                if(Objects.equals(dir, "TOP")){
+                    if((co[0] - 60 <= car.getOffsetX() && co[0] + 60 >= car.getOffsetX()) && (co[1] + 120 >= car.getOffsetY() && co[1] + 60 <= car.getOffsetY())){
+                        car.isStopped = true;
+                    }
+                }
+                if(Objects.equals(dir, "BOTTOM")){
+                    if((co[0] - 60 <= car.getOffsetX() && co[0] + 60 >= car.getOffsetX()) && (co[1] - 120 <= car.getOffsetY() && co[1] - 60 >= car.getOffsetY())){
+                        car.isStopped = true;
+                    }
+                }
+                if(Objects.equals(dir, "RIGHT")){
+                    if((co[0] - 120 <= car.getOffsetX() && co[0] - 60 >= car.getOffsetX()) && (co[1] - 60 <= car.getOffsetY() && co[1] + 60 >= car.getOffsetY())){
+
+                    }
+                }
+                if(Objects.equals(dir, "LEFT")){
+                    if((co[0] + 120 >= car.getOffsetX() && co[0] + 60 <= car.getOffsetX()) && (co[1] - 60 >= car.getOffsetY() && co[1] + 60 <= car.getOffsetY())){
+
+                    }
+                }
+            } else {
+                if(Objects.equals(dir, "RIGHT")){
+                    if((co[0] - 120 <= car.getOffsetX() && co[0] - 60 >= car.getOffsetX()) && (co[1] - 60 <= car.getOffsetY() && co[1] + 60 >= car.getOffsetY())){
+                        car.isStopped = true;
+                    }
+                }
+                if(Objects.equals(dir, "LEFT")){
+                    if((co[0] + 120 >= car.getOffsetX() && co[0] + 60 <= car.getOffsetX()) && (co[1] - 60 >= car.getOffsetY() && co[1] + 60 <= car.getOffsetY())){
+                        car.isStopped = true;
+                    }
+                }
+                if(Objects.equals(dir, "TOP")){
+                    if((co[0] + 20 <= car.getOffsetX() && co[0] + 60 >= car.getOffsetX()) && (co[1] - 60 >= car.getOffsetY() && co[1] + 60 <= car.getOffsetY())){
+                        car.changeDir("LEFT");
+                    }
+                }
+                if(Objects.equals(dir, "BOTTOM")){
+                    if(((co[0] - 60 <= car.getOffsetX()) && co[0] + 60 >= car.getOffsetX()) && (co[1] + 10 <= car.getOffsetY() && co[1] - 10 >= car.getOffsetY())){
+                        car.changeDir("LEFT");
+                    }
+                }
+            }
         }
     }
     public static void toggleHorizontal(){
@@ -72,6 +118,10 @@ public class Intersection {
             }
             lights.add(new Lights(Lights.light.NOLAMP,getPositionByNum(i)));
         }
+    }
+
+    public boolean isBlocked(){
+        return isBlockedHor;
     }
 
 }

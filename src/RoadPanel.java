@@ -69,9 +69,6 @@ public class RoadPanel extends JPanel implements MouseListener {
 
     private void drawCars(Graphics g) throws IOException {
         for (Car car : carList) {
-            if(car.isStopped){
-                continue;
-            }
             g.drawImage(ImageIO.read((new File(car.getCarUrl()))), car.getOffsetX(), car.getOffsetY(), null);
         }
     }

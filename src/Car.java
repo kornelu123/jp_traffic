@@ -1,5 +1,6 @@
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 public class Car {
@@ -17,9 +18,9 @@ public class Car {
     }
 
     final static int[][] respPoints = {
-            {155, 0},
-            {0,613},
-            {555,0}
+            {133, 0},
+            {0,590},
+            {505,0}
     };
 
     public int getOffsetY() {
@@ -45,6 +46,7 @@ public class Car {
             "RIGHT",
             "BOTTOM"
     };
+    private static String turnDir;
     private int offsetX, offsetY;
     public Car(int ind, String direct){
         offsetX = respPoints[ind][0];
@@ -74,7 +76,13 @@ public class Car {
             case "BOTTOM" -> offsetY++;
         }
     }
-    public static void doCarWork(ArrayList<Car> cars, int desValue){
+
+    public String getDirection() {
+        return direction;
+    }
+    private String curTurn;
+
+    public static void doCarWork(ArrayList<Car> cars, int desValue, ArrayList<Intersection> interSections){
         int count = 0;
         Random rand = new Random();
         if(cars.isEmpty()){
@@ -84,24 +92,26 @@ public class Car {
             }
             return;
         }
-        for(Car car : cars){
-            if(car.getOffsetY() < 0 || car.getOffsetX() < 0){
-                cars.remove(car);
-                continue;
-            }
-            
-            if(car.isStopped){
-                continue;
-            }
-            car.moveCar();
-            count ++;
+            for (Iterator<Car> it = cars.iterator(); it.hasNext(); ) {
+                Car car;
+                car = it.next();
+                if (car.offsetX < 0 || car.getOffsetX() > 944 || car.getOffsetY() < 0 || car.getOffsetY() > 845){
+                    it.remove();
+                    count--;
+                    continue;
+                }
+                if(!car.isStopped) {
+                    car.moveCar();
+                }
+                count++;
         }
-        for(;count < desValue;count++){
+        for(;count < desValue;count++) {
             int random = rand.nextInt(3);
             cars.add(new Car(random, respDir[random]));
         }
     }
     public void changeDir(String direct){
         direction = direct;
+        setCarIndex(direct);
     }
 }

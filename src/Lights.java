@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.sql.Time;
+import java.util.ArrayList;
 
 public class Lights {
     private Point2D coords;
@@ -64,24 +65,28 @@ public class Lights {
     public String getUrl() {
         return urls[urlIndex];
     }
-    public void doLightsWork(Time timeStamp){
+    public void doLightsWork(Time timeStamp, ArrayList<Car> carList){
         if(deadLine == null){
             deadLine = new Time(timeStamp.getTime() + 10000);
         }
         if(timeStamp.compareTo(deadLine) >= 0){
             switch (curLight){
                 case GREEN, RED -> {
-                    deadLine.setTime(timeStamp.getTime() + 1000);
-                        reevaluateLights(light.YELLOW);
-                        Intersection.toggleHorizontal();
-                    }
+                    deadLine.setTime(timeStamp.getTime() + 2000);
+                    reevaluateLights(light.YELLOW);
+                }
                 case YELLOW -> {
                     deadLine.setTime(timeStamp.getTime() + 10000);
                     if(lastLight == light.RED) {
                         reevaluateLights(light.GREEN);
+                        Intersection.toggleHorizontal();
                     }
                     if(lastLight == light.GREEN){
                         reevaluateLights(light.RED);
+                        Intersection.toggleHorizontal();
+                    }
+                    for(Car car : carList){
+                        car.isStopped = false;
                     }
                 }
             }

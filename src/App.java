@@ -30,9 +30,9 @@ public class App {
         @Override
         public void run() {
             for (Intersection in :trafficMap.getInterList()){
-                in.doIntersectionWork(new Time(System.currentTimeMillis()));
+                in.doIntersectionWork(new Time(System.currentTimeMillis()),trafficMap.carList);
             }
-            Car.doCarWork(trafficMap.getCarList(), trafficMap.getCarDesire());
+            Car.doCarWork(trafficMap.getCarList(), trafficMap.getCarDesire(), trafficMap.getInterList());
         }
     }
 
