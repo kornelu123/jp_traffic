@@ -65,7 +65,6 @@ public class Car {
         carIndex = 0;
     }
     private void moveCar(){
-        System.out.println(offsetX + "| " + offsetY );
         if(isStopped){
             return;
         }

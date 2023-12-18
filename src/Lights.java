@@ -65,7 +65,7 @@ public class Lights {
     public String getUrl() {
         return urls[urlIndex];
     }
-    public void doLightsWork(Time timeStamp, ArrayList<Car> carList){
+    public void doLightsWork(Time timeStamp, ArrayList<Car> carList, ArrayList<Pedestrian> pedList){
         if(deadLine == null){
             deadLine = new Time(timeStamp.getTime() + 10000);
         }
@@ -87,6 +87,9 @@ public class Lights {
                     }
                     for(Car car : carList){
                         car.isStopped = false;
+                    }
+                    for(Pedestrian ped: pedList){
+                        ped.isStopped = false;
                     }
                 }
             }

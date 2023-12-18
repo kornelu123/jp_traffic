@@ -30,9 +30,10 @@ public class App {
         @Override
         public void run() {
             for (Intersection in :trafficMap.getInterList()){
-                in.doIntersectionWork(new Time(System.currentTimeMillis()),trafficMap.carList);
+                in.doIntersectionWork(new Time(System.currentTimeMillis()),trafficMap.carList,trafficMap.pedestrians);
             }
             Car.doCarWork(trafficMap.getCarList(), trafficMap.getCarDesire(), trafficMap.getInterList());
+            Pedestrian.doPedestrianWork(trafficMap.pedestrians, trafficMap.getCarDesire(), trafficMap.getInterList());
         }
     }
 

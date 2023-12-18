@@ -14,6 +14,7 @@ public class RoadPanel extends JPanel implements MouseListener {
     public static Dimension imageSize = new Dimension(944, 849);
     private ArrayList<Intersection> interList = new ArrayList<>();
     public ArrayList<Car> carList = new ArrayList<>();
+    public ArrayList<Pedestrian> pedestrians = new ArrayList<Pedestrian>();
 
     public ArrayList<Car> getCarList() {
         return carList;
@@ -49,6 +50,11 @@ public class RoadPanel extends JPanel implements MouseListener {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        try {
+            drawPedestrians(g);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void initIntersections() {
@@ -72,6 +78,12 @@ public class RoadPanel extends JPanel implements MouseListener {
             g.drawImage(ImageIO.read((new File(car.getCarUrl()))), car.getOffsetX(), car.getOffsetY(), null);
         }
     }
+    private void drawPedestrians(Graphics g )throws IOException{
+        for(Pedestrian ped: pedestrians){
+            g.drawImage(ImageIO.read(new File(ped.url)),ped.getOffsetX(), ped.getOffsetY(), null);
+        }
+    }
+
 
     public ArrayList<Intersection> getInterList() {
         return interList;
